@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Culqi - Java</title>
+    <script src="https://pago.culqi.com/js/v1"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</head>
+    <body>
+
+    <h1>Nueva Venta</h1>
+
+    <input id="codigo_comercio" th:value="${codigo_comercio}" hidden = "hidden" />
+    <input id="llave_secreta" th:value="${llave_secreta}" hidden = "hidden" />
+    <input id="nombreComercial" th:value="${nombreComercial}" hidden = "hidden" />
+
+    <table>
+
+        <tr><td>Moneda:</td><td>
+            <select id="moneda">
+                <option th:value="PEN">PEN</option>
+                <option th:value="USD">USD</option>
+            </select>
+
+        </td></tr>
+
+        <tr><td>Monto:</td><td><input id="monto" /></td></tr>
+
+        <tr><td>Descripción:</td><td><input id="descripcion" /></td></tr>
+
+        <tr><td>Pedido:</td><td><input id="pedido" th:value="${nroPedido}" /></td></tr>
+
+        <tr><td>Codigo del País:</td><td><input id="codigo_pais" value = "PE" /></td></tr>
+
+        <tr><td>Ciudad:</td><td><input id="ciudad" /></td></tr>
+
+        <tr><td>Usuario:</td><td><input id="usuario" /></td></tr>
+
+        <tr><td>Dirección:</td><td><input id="direccion" /></td></tr>
+
+        <tr><td>Teléfono:</td><td><input id="telefono" /></td></tr>
+
+        <tr><td>Nombres:</td><td><input id="nombres" /></td></tr>
+
+        <tr><td>Apellidos:</td><td><input id="apellidos" /></td></tr>
+
+        <tr><td>Correo Electrónico:</td><td><input id="correo_electronico" placeholder = "@" /></td></tr>
+
+    </table>
+    <br/>
+    <button id="botonPagar">Pagar</button>
+
+    <!-- Abre el checkout Culqi -->
+    <script type="text/javascript" th:inline="javascript">
+
+        function configCulqi() {
+            Culqi.codigoComercio = document.getElementById("codigo_comercio").value;
+
+           Culqi.configurar({
+                nombre: document.getElementById("nombreComercial").value,
+                orden: document.getElementById("pedido").value,
+                moneda: document.getElementById("moneda").value,
+                descripcion: document.getElementById("descripcion").value,
+                monto: parseInt(document.getElementById("monto").value),
+                guardar: false
+            });
+        }
+
+       $('#botonPagar').on('click', function(e){
+            configCulqi();
+            Culqi.abrir();
+            e.preventDefault();
+        });
+
+
+       // Ejemplo: Tratando respuesta con AJAX (jQuery)
+        function culqi() {
+                if (Culqi.error){
+                    alert("Culqi.error.mensaje");
+                } else {
+                    $.ajax({
+                        url: "/nueva-venta",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            'token'               : Culqi.token.id,
+                            'codigo_comercio'     : Culqi.codigoComercio,
+                            'moneda'              : document.getElementById("moneda").value,
+                            'monto'               : document.getElementById("monto").value,
+                            'descripcion'         : document.getElementById("descripcion").value,
+                            'pedido'              : document.getElementById("pedido").value,
+                            'codigo_pais'         : document.getElementById("codigo_pais").value,
+                            'ciudad'              : document.getElementById("ciudad").value,
+                            'usuario'             : document.getElementById("usuario").value,
+                            'direccion'           : document.getElementById("direccion").value,
+                            'telefono'            : document.getElementById("telefono").value,
+                            'nombres'             : document.getElementById("nombres").value,
+                            'apellidos'           : document.getElementById("apellidos").value,
+                            'correo_electronico'  : document.getElementById("correo_electronico").value,
+                            'llave_secreta'       : document.getElementById("llave_secreta").value
+                        }),
+
+                       success: function(data) {
+                            alert("Venta creada correctamente!");
+                        },
+
+                       error: function( ) {
+                            alert("Ha ocurrido un error al crear la venta!");
+                        }
+
+                   });
+
+               }
+
+           };
+
+    </script>
+
+    </body>
+</html>

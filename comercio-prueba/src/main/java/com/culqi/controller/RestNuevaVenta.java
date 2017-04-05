@@ -99,4 +99,76 @@ public class RestNuevaVenta {
         }
 
     }
+
+    @RequestMapping(value = "/venta", method = RequestMethod.POST)
+    public ResponseEntity<String> createVenta(@Validated @RequestBody Venta ventaData){
+        RestTemplate restTemplateNuevaVenta = new RestTemplate();
+
+        Map<String, Object> requestVenta = new HashMap<>();
+        requestVenta.put("source_id", ventaData.getToken());
+        requestVenta.put("currency_code", ventaData.getMoneda());
+        requestVenta.put("amount", ventaData.getMonto());
+        requestVenta.put("description", ventaData.getDescripcion());
+        requestVenta.put("pedido", ventaData.getPedido());
+        requestVenta.put("email", ventaData.getCorreo_electronico());
+
+        Map<String, Object> antifraud = new HashMap<>();
+        antifraud.put("country_code", ventaData.getCodigo_pais());
+        antifraud.put("address_city", ventaData.getCiudad());
+        antifraud.put("address", ventaData.getDireccion());
+        antifraud.put("phone_number", ventaData.getTelefono());
+        antifraud.put("first_name", ventaData.getNombres());
+        antifraud.put("last_name", ventaData.getApellidos());
+
+        requestVenta.put("antifraud_details", antifraud);
+
+        Gson gson = new Gson();
+        String body = gson.toJson(requestVenta);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Bearer " + ventaData.getLlave_secreta());
+
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> responseVenta;
+        HashMap<String, Object> respuestaVenta = new HashMap<>();
+
+        try {
+
+            responseVenta = restTemplateNuevaVenta.exchange("https://api.culqi.com/v2/charges", HttpMethod.POST, entity, String.class);
+
+            log.info("Respuesta de la venta: " + responseVenta.toString());
+
+            respuestaVenta.put("respuesta", "Venta creada exitosamente.");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String test = "";
+            try {
+                test = objectMapper.writeValueAsString(respuestaVenta);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            return ResponseEntity.ok(test);
+
+        } catch (HttpClientErrorException e) {
+
+            log.info("Respuesta de la creación de la Venta: " + e.getResponseBodyAsString());
+
+            respuestaVenta.put("error", "Error al crear una venta.");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String test = "";
+            try {
+                test = objectMapper.writeValueAsString(respuestaVenta);
+            } catch (JsonProcessingException x) {
+                x.printStackTrace();
+            }
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(test);
+
+        }
+
+    }
 }

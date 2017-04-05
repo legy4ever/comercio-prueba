@@ -52,6 +52,18 @@ public class Ventas {
         return "demo-venta";
     }
 
+    @RequestMapping(value = "/saga")
+    public String VentaComercioCinco(Model model) {
+        datosComercio(model, "5");
+        return "demo-venta-integ";
+    }
+
+    @RequestMapping(value = "/peru_go_travel")
+    public String VentaComercioSeis(Model model) {
+        datosComercio(model, "6");
+        return "demo-venta-integ";
+    }
+
     private void datosComercio(Model model, String numero) {
         char[] result = new char[9];
 

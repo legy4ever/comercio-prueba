@@ -22,10 +22,16 @@ public class Ventas {
     private String abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private char[] VALID_CHARS = abc.toCharArray();
 
-    @RequestMapping(value={"/","/index"})
+    @RequestMapping(value = {"/", "/index"})
     public String index(Model model) {
         model.addAttribute("titulo", "Comercios de Prueba");
         return "index";
+    }
+
+    @RequestMapping(value = {"/demo"})
+    public String demo(Model model) {
+        datosComercio(model, "0");
+        return "demo-venta-integ";
     }
 
     @RequestMapping(value = "/manchego_tours")
@@ -61,6 +67,24 @@ public class Ventas {
     @RequestMapping(value = "/peru_go_travel")
     public String VentaComercioSeis(Model model) {
         datosComercio(model, "6");
+        return "demo-venta-integ";
+    }
+
+    @RequestMapping(value = "/concept2")
+    public String VentaComercioSiete(Model model) {
+        datosComercio(model, "7");
+        return "demo-venta-integ";
+    }
+
+    @RequestMapping(value = "/byrocioflores")
+    public String VentaComercioOcho(Model model) {
+        datosComercio(model, "8");
+        return "demo-venta-integ";
+    }
+
+    @RequestMapping(value = "/movistar")
+    public String VentaComercioNueve(Model model) {
+        datosComercio(model, "9");
         return "demo-venta-integ";
     }
 

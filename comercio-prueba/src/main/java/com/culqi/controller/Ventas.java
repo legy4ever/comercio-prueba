@@ -88,6 +88,12 @@ public class Ventas {
         return "demo-venta-integ";
     }
 
+    @RequestMapping(value = "/bullfit")
+    public String VentaComercioDiez(Model model) {
+        datosComercio(model, "10");
+        return "demo-venta-integ";
+    }
+
     private void datosComercio(Model model, String numero) {
         char[] result = new char[9];
 

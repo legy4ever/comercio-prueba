@@ -5,89 +5,109 @@
     <title>Culqi - Java</title>
     <script src="https://pago.culqi.com/js/v1"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <link th:href="@{/css/bootstrap.min.css}" type="text/css" rel="stylesheet" />
+    <link th:href="@{/css/bootstrap-theme.min.css}" type="text/css" rel="stylesheet" />
 </head>
     <body>
 
-    <h1>Nueva Venta</h1>
+    <div class="col-md-4"></div>
+    <div class="col-md-4" style="text-align: -webkit-center;">
+        <div class="col-md-12" >
+            <h1>Nueva Venta</h1>
+        </div>
+        <div>
+            <input id="codigo_comercio" th:value="${codigo_comercio}" hidden = "hidden" />
+            <input id="llave_secreta" th:value="${llave_secreta}" hidden = "hidden" />
+            <input id="nombreComercial" th:value="${nombreComercial}" hidden = "hidden" />
+        </div>
+        <div class="col-md-12"  style="text-align: left">
+            <div class="form-group">
+                <label>Moneda</label>
+                <select class="form-control" id="moneda">
+                    <option th:value="PEN">PEN</option>
+                    <option th:value="USD">USD</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Monto</label>
+                <input class="form-control" id="monto" />
+            </div>
+            <div class="form-group">
+                <label>Descripción</label>
+                <input class="form-control" id="descripcion" />
+            </div>
+            <div class="form-group">
+                <label>Pedido</label>
+                <input class="form-control" id="pedido" th:value="${nroPedido}" />
+            </div>
+            <div class="form-group">
+                <label>Codigo del País</label>
+                <input class="form-control" id="codigo_pais" value = "PE" />
+            </div>
+            <div class="form-group">
+                <label>Ciudad</label>
+                <input class="form-control" id="ciudad" />
+            </div>
+            <div class="form-group">
+                <label>Usuario</label>
+                <input class="form-control" id="usuario" />
+            </div>
+            <div class="form-group">
+                <label>Dirección</label>
+                <input class="form-control" id="direccion" />
+            </div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input class="form-control" id="telefono" />
+            </div>
+            <div class="form-group">
+                <label>Nombres</label>
+                <input class="form-control" id="nombres" />
+            </div>
+            <div class="form-group">
+                <label>Apellidos</label>
+                <input class="form-control" id="apellidos" />
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input class="form-control" id="correo_electronico" />
+            </div>
+            <div style="width: 100%">
+                <div style=" text-align: -webkit-center; padding-top: 50px; padding-bottom: 50px">
+                    <a id="botonPagar" class="btn btn-primary" href="#" style="width: 150px">Pagar</a>
+                </div>
+            </div>
+            <div class="panel panel-default" id="response-panel">
+                <div class="panel-heading">Response</div>
+                <div class="panel-body" id="response"></div>
+            </div>
+        </div>
 
-    <input id="codigo_comercio" th:value="${codigo_comercio}" hidden = "hidden" />
-    <input id="llave_secreta" th:value="${llave_secreta}" hidden = "hidden" />
-    <input id="nombreComercial" th:value="${nombreComercial}" hidden = "hidden" />
+        <!-- Abre el checkout Culqi -->
+        <script type="text/javascript" th:inline="javascript">
 
-    <table>
+            function configCulqi() {
+                Culqi.codigoComercio = document.getElementById("codigo_comercio").value;
 
-        <tr><td>Moneda:</td><td>
-            <select id="moneda">
-                <option th:value="PEN">PEN</option>
-                <option th:value="USD">USD</option>
-            </select>
+               Culqi.configurar({
+                    nombre: document.getElementById("nombreComercial").value,
+                    orden: document.getElementById("pedido").value,
+                    moneda: document.getElementById("moneda").value,
+                    descripcion: document.getElementById("descripcion").value,
+                    monto: parseInt(document.getElementById("monto").value),
+                    guardar: false
+                });
+            }
 
-        </td></tr>
-
-        <tr><td>Monto:</td><td><input id="monto" /></td></tr>
-
-        <tr><td>Descripción:</td><td><input id="descripcion" /></td></tr>
-
-        <tr><td>Pedido:</td><td><input id="pedido" th:value="${nroPedido}" /></td></tr>
-
-        <tr><td>Codigo del País:</td><td><input id="codigo_pais" value = "PE" /></td></tr>
-
-        <tr><td>Ciudad:</td><td><input id="ciudad" /></td></tr>
-
-        <tr><td>Usuario:</td><td><input id="usuario" /></td></tr>
-
-        <tr><td>Dirección:</td><td><input id="direccion" /></td></tr>
-
-        <tr><td>Teléfono:</td><td><input id="telefono" /></td></tr>
-
-        <tr><td>Nombres:</td><td><input id="nombres" /></td></tr>
-
-        <tr><td>Apellidos:</td><td><input id="apellidos" /></td></tr>
-
-        <tr><td>Correo Electrónico:</td><td><input id="correo_electronico" placeholder = "@" /></td></tr>
-
-    </table>
-    <br/>
-    <button id="botonPagar">Pagar</button>
-    <br/><br/><br/>
-    <div class="panel panel-default" id="response-panel">
-        <div class="panel-heading">Response</div>
-        <div class="panel-body" id="response"></div>
-    </div>
-
-    <!-- Abre el checkout Culqi -->
-    <script type="text/javascript" th:inline="javascript">
-
-        function configCulqi() {
-            Culqi.codigoComercio = document.getElementById("codigo_comercio").value;
-
-           Culqi.configurar({
-                nombre: document.getElementById("nombreComercial").value,
-                orden: document.getElementById("pedido").value,
-                moneda: document.getElementById("moneda").value,
-                descripcion: document.getElementById("descripcion").value,
-                monto: parseInt(document.getElementById("monto").value),
-                guardar: false
+            $('#botonPagar').on('click', function(e){
+                configCulqi();
+                Culqi.abrir();
+                e.preventDefault();
             });
-        }
-
-       $('#botonPagar').on('click', function(e){
-            configCulqi();
-            Culqi.abrir();
-            e.preventDefault();
-        });
 
 
-       // Ejemplo: Tratando respuesta con AJAX (jQuery)
-        function culqi() {
+            // Ejemplo: Tratando respuesta con AJAX (jQuery)
+            function culqi() {
                 if (Culqi.error){
                     alert("Culqi.error.mensaje");
                 } else {
@@ -122,9 +142,11 @@
                         }
                    });
                }
-           };
+            };
 
-    </script>
+        </script>
+    </div>
+    <div class="col-md-4"></div>
 
     </body>
 </html>

@@ -5,6 +5,14 @@
     <title>Culqi - Java</title>
     <script src="https://pago.culqi.com/js/v1"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 </head>
     <body>
 
@@ -49,6 +57,11 @@
     </table>
     <br/>
     <button id="botonPagar">Pagar</button>
+    <br/><br/><br/>
+    <div class="panel panel-default" id="response-panel">
+        <div class="panel-heading">Response</div>
+        <div class="panel-body" id="response"></div>
+    </div>
 
     <!-- Abre el checkout Culqi -->
     <script type="text/javascript" th:inline="javascript">
@@ -100,18 +113,15 @@
                             'llave_secreta'       : document.getElementById("llave_secreta").value
                         }),
 
-                       success: function(data) {
-                            alert("Venta creada correctamente!");
+                        success: function(data) {
+                            console.log(data.responseText);
                         },
 
-                       error: function( ) {
-                            alert("Ha ocurrido un error al crear la venta!");
+                        error: function(data) {
+                            console.log(data.responseText);
                         }
-
                    });
-
                }
-
            };
 
     </script>

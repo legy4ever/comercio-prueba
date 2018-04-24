@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
@@ -68,7 +69,7 @@ public class RestNuevaVenta {
 
             log.info("Respuesta de la venta: " + responseVenta.toString());
 
-            respuestaVenta.put("respuesta", "Venta creada exitosamente.");
+            respuestaVenta.put("respuesta", responseVenta.toString());
 
             ObjectMapper objectMapper = new ObjectMapper();
             String test = "";
@@ -84,7 +85,7 @@ public class RestNuevaVenta {
 
             log.info("Respuesta de la creación de la Venta: " + e.getResponseBodyAsString());
 
-            respuestaVenta.put("error", "Error al crear una venta.");
+            respuestaVenta.put("error", e.getResponseBodyAsString());
 
             ObjectMapper objectMapper = new ObjectMapper();
             String test = "";
@@ -132,7 +133,8 @@ public class RestNuevaVenta {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> responseVenta;
-        HashMap<String, Object> respuestaVenta = new HashMap<>();
+        String test;
+        JSONObject object;
 
         try {
 
@@ -140,31 +142,19 @@ public class RestNuevaVenta {
 
             log.info("Respuesta de la venta: " + responseVenta.toString());
 
-            respuestaVenta.put("respuesta", "Venta creada exitosamente.");
+            object = new JSONObject(responseVenta.getBody());
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String test = "";
-            try {
-                test = objectMapper.writeValueAsString(respuestaVenta);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            test = object.get("user_message").toString();
 
             return ResponseEntity.ok(test);
 
         } catch (HttpClientErrorException e) {
 
-            log.info("Respuesta de la creación de la Venta: " + e.getResponseBodyAsString());
+            log.info("Respuesta de la Venta: " + e.getResponseBodyAsString());
 
-            respuestaVenta.put("error", "Error al crear una venta.");
+            object = new JSONObject(e.getResponseBodyAsString());
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String test = "";
-            try {
-                test = objectMapper.writeValueAsString(respuestaVenta);
-            } catch (JsonProcessingException x) {
-                x.printStackTrace();
-            }
+            test = object.get("user_message").toString();
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(test);
 

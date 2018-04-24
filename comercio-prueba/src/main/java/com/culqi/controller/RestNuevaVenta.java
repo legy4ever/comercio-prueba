@@ -1,5 +1,6 @@
 package com.culqi.controller;
 
+import com.culqi.model.OutComeData;
 import com.culqi.model.Venta;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -144,20 +145,14 @@ public class RestNuevaVenta {
 
             object = new JSONObject(responseVenta.getBody());
 
-            test = object.get("user_message").toString();
+            test = object.get("outcome").toString();
 
-            return ResponseEntity.ok(test);
+            OutComeData outComeData = new Gson().fromJson(test, OutComeData.class);
 
-        } catch (HttpClientErrorException e) {
+            return ResponseEntity.ok(outComeData.getUserMessage());
 
-            log.info("Respuesta de la Venta: " + e.getResponseBodyAsString());
-
-            object = new JSONObject(e.getResponseBodyAsString());
-
-            test = object.get("user_message").toString();
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(test);
-
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error en la venta. Por favor comuníquese con CULQI para más información.");
         }
 
     }

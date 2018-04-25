@@ -144,12 +144,16 @@ public class RestNuevaVenta {
             log.info("Respuesta de la venta: " + responseVenta.toString());
 
             object = new JSONObject(responseVenta.getBody());
+            OutComeData outComeData = null;
 
-            test = object.get("outcome").toString();
+            if (object.get("object").equals("charge")) {
+                test = object.get("outcome").toString();
+                outComeData = new Gson().fromJson(test, OutComeData.class);
+            } else {
+                test = object.get("user_message").toString();
+            }
 
-            OutComeData outComeData = new Gson().fromJson(test, OutComeData.class);
-
-            return ResponseEntity.ok(outComeData != null ? outComeData.getUserMessage() : test);
+            return ResponseEntity.ok(outComeData != null ? outComeData.getUserMessage() != null ? outComeData.getUserMessage() : test : test);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error en la venta. Por favor comuníquese con CULQI para más información.");

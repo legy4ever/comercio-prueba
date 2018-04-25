@@ -140,10 +140,12 @@
                         }),
 
                         success: function(data) {
+                            console.log(data);
                             document.getElementById("response").innerHTML = data.responseText;
                         },
 
                         error: function(data) {
+                            console.log(data);
                             document.getElementById("response").innerHTML = data.responseText;
                         }
                     });
